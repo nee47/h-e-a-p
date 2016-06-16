@@ -150,10 +150,12 @@ void upheap(void** a, size_t nodo, cmp_func_t cmp){
 }
 
 bool heap_encolar(heap_t *heap, void *elem){
+  bool resultado = true;
   if(heap->tam + 2  > heap->largo ){
     size_t nuevo_largo = heap->largo * REDIMEN ;
-    redimensionar(heap, nuevo_largo);
+    resultado = redimensionar(heap, nuevo_largo);
   }
+  if(!resultado) return false;
   heap->datos[heap->tam] = elem ;
   upheap(heap->datos, heap->tam, heap->cmp);
   heap->tam++;
@@ -168,9 +170,11 @@ void *heap_ver_max(const heap_t *heap){
 
 void *heap_desencolar(heap_t *heap){
   if(heap_esta_vacio(heap)) return NULL;
+  bool resultado = true;
   if(heap->largo > 4 * heap->tam && heap->tam > TAM_INI){
-    redimensionar(heap, heap->largo / REDIMEN);
+    resultado = redimensionar(heap, heap->largo / REDIMEN);
   }
+  if(!resultado) return NULL;
   void* dato_salida = heap->datos[0];
   heap->datos[0] = heap->datos[heap->tam-1];
   down_heap(heap->datos, heap->tam, 0, heap->cmp);
